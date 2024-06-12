@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+input[type="submit"], button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+input[type="submit"]:hover, button:hover {
+    background-color: #45a049;
+}
+.hidden {
+    display: none;
+}
+
+#editing{
+  height: 35px;
+  border-radius: 4px;
+  width: 85px;
+}
+
+.input_editx{
+  width: 95%;
+  height: 30px;
+}
+
+.inputOfHomeContainer{
+  width: 95%;
+}

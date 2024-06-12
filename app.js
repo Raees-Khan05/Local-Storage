@@ -62,21 +62,23 @@ var password = document.getElementById("password");
 var user_email = document.getElementById("user_email");
 var login_container = document.getElementById("login_container");
 var home_container = document.getElementById("home_container");
+var subject = document.getElementById("subject");
 var note = document.getElementById("note");
 
 function loginUser() {
-  if (!email.value || !password.value)
+  if (!email.value || !password.value) {
     return alert("Please add email and password.");
-  localStorage.setItem("email", email.value);
+  }
+  localStorage.setItem("currentUser", email.value);
   checkIsUserLogin();
 }
 
 function checkIsUserLogin() {
-  var email = localStorage.getItem("email");
-  if (email) {
+  var currentUser = localStorage.getItem("currentUser");
+  if (currentUser) {
     login_container.style.display = "none";
     home_container.style.display = "block";
-    user_email.innerText = email;
+    user_email.innerText = currentUser;
     displayUserNotes();
   } else {
     login_container.style.display = "block";
@@ -84,66 +86,61 @@ function checkIsUserLogin() {
   }
 }
 
+
 checkIsUserLogin();
 
 function logout() {
-  localStorage.removeItem("email");
+  localStorage.removeItem("currentUser");
   checkIsUserLogin();
 }
 
 function submitNote() {
-  var email = localStorage.getItem("email");
+  var currentUser = localStorage.getItem("currentUser");
 
   var obj = {
-    email: email,
+    subject: subject.value,
     note: note.value,
   };
 
-  saveValueToLocalStorage(obj);
+  saveValueToLocalStorage(currentUser, obj);
+  subject.value = "";
   note.value = "";
 }
 
-function saveValueToLocalStorage(obj) {
-  var notes = localStorage.getItem("notes");
-  console.log("notes from local storage=>", notes);
+function saveValueToLocalStorage(email, obj) {
+  var userNotes = localStorage.getItem(email);
 
-  if (notes) {
-    notes = JSON.parse(notes);
-    notes.push(obj);
-    console.log(notes);
-    localStorage.setItem("notes", JSON.stringify(notes));
+  if (userNotes) {
+    userNotes = JSON.parse(userNotes);
+    userNotes.push(obj);
+    localStorage.setItem(email, JSON.stringify(userNotes));
   } else {
-    notes = [obj];
-    console.log(notes);
-    localStorage.setItem("notes", JSON.stringify(notes));
+    userNotes = [obj];
+    localStorage.setItem(email, JSON.stringify(userNotes));
   }
 
   displayUserNotes();
 }
 
 function displayUserNotes() {
-  var notes = localStorage.getItem("notes");
+  var currentUser = localStorage.getItem("currentUser");
+  var userNotes = localStorage.getItem(currentUser);
   var list = document.getElementById("list");
-  var currentUserEmail = localStorage.getItem("email");
 
-  if (notes) {
+  if (userNotes) {
     list.innerHTML = "";
-    notes = JSON.parse(notes);
-    console.log(notes);
-    notes.forEach(function (data, ind) {
-      console.log("data=>", data);
-      if (data.email === currentUserEmail) {
-        var liElement = ` <li class="border rounded p-2 my-2">
-        <p class = "font-medium">${data.note}</p> 
-            <p>${data.email}</p>
-          </li>`;
-        list.innerHTML += liElement;
-      }
+    userNotes = JSON.parse(userNotes);
+    userNotes.forEach(function (data, ind) {
+      var liElement = `<li class="border rounded p-2 my-2">
+        <p><b>Subject:</b> ${data.subject}</p>
+        <p>${data.note}</p>
+      </li>`;
+      list.innerHTML += liElement;
     });
+  } else {
+    list.innerHTML = "<p>Notes will appear here.</p>";
   }
 }
-
-displayUserNotes();
 
 
 
